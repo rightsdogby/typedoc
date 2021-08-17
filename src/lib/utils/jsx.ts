@@ -31,6 +31,8 @@ type BannedElementKeys =
     | "innerHTML"
     | "innerText"
     | "textContent"
+    | "className"
+    | "htmlFor"
     | "style";
 
 type ElementKeys<T> = Exclude<
@@ -38,15 +40,26 @@ type ElementKeys<T> = Exclude<
     BannedElementKeys | KeysOfType<T, Function>
 >;
 
-type BasicHtmlElements = {
-    [K in keyof HTMLElementTagNameMap]: {
-        [K2 in ElementKeys<HTMLElementTagNameMap[K]>]?: K2 extends "children"
-            ? Children
-            : HTMLElementTagNameMap[K][K2];
-    };
+type ElementProps<T> = {
+    [K in ElementKeys<T>]?: K extends "children" ? Children : T[K];
+} & {
+    class?: string;
 };
 
-export interface IntrinsicElements extends BasicHtmlElements {}
+interface SpecialIntrinsicElements {
+    label: ElementProps<HTMLLabelElement> & { for?: string };
+}
+
+type BasicHtmlElements = {
+    [K in Exclude<
+        keyof HTMLElementTagNameMap,
+        keyof SpecialIntrinsicElements
+    >]: ElementProps<HTMLElementTagNameMap[K]>;
+};
+
+export interface IntrinsicElements
+    extends BasicHtmlElements,
+        SpecialIntrinsicElements {}
 
 export interface Element {
     tag: typeof Fragment | keyof IntrinsicElements | Component<any>;

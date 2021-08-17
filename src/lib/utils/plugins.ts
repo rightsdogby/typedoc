@@ -2,7 +2,6 @@ import * as FS from "fs";
 import * as Path from "path";
 
 import type { Application } from "../application";
-import { readFile } from "./fs";
 import type { Logger } from "./loggers";
 
 export function loadPlugins(app: Application, plugins: readonly string[]) {
@@ -93,8 +92,8 @@ export function discoverNpmPlugins(app: Application): string[] {
  */
 function loadPackageInfo(logger: Logger, fileName: string): any {
     try {
-        return JSON.parse(readFile(fileName));
-    } catch (error) {
+        return require(fileName);
+    } catch {
         logger.error(`Could not parse ${fileName}`);
         return {};
     }

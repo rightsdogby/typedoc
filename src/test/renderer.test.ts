@@ -55,12 +55,12 @@ describe("Renderer", function () {
     const out = Path.join(__dirname, "..", "tmp", "test");
     let app: Application, project: ProjectReflection | undefined;
 
-    before(function () {
-        remove(out);
+    before(async function () {
+        await remove(out);
     });
 
-    after(function () {
-        remove(out);
+    after(async function () {
+        await remove(out);
     });
 
     it("constructs", function () {
@@ -95,7 +95,7 @@ describe("Renderer", function () {
         this.timeout(0);
         await app.generateDocs(project!, out);
 
-        remove(Path.join(out, "assets"));
+        await remove(Path.join(out, "assets"));
         compareDirectories(Path.join(__dirname, "renderer", "specs"), out);
     });
 });

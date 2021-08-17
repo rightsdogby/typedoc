@@ -4,7 +4,7 @@ import * as FS from "fs";
 import { Component, ConverterComponent } from "../components";
 import { Converter } from "../converter";
 import type { Context } from "../context";
-import { BindOption, readFile } from "../../utils";
+import { BindOption } from "../../utils";
 import { getCommonDirectory } from "../../utils/fs";
 
 /**
@@ -96,11 +96,11 @@ export class PackagePlugin extends ConverterComponent {
     private onBeginResolve(context: Context) {
         const project = context.project;
         if (this.readmeFile) {
-            project.readme = readFile(this.readmeFile);
+            project.readme = "readFile(this.readmeFile);";
         }
 
         if (this.packageFile) {
-            project.packageInfo = JSON.parse(readFile(this.packageFile));
+            project.packageInfo = require(this.packageFile);
             if (!project.name) {
                 project.name = String(project.packageInfo.name);
             }

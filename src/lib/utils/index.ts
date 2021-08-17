@@ -1,4 +1,10 @@
-export { IfInternal, NeverIfInternal } from "./general";
+export {
+    IfInternal,
+    NeverIfInternal,
+    StringIfExternal,
+    KeysOfType,
+    WritableKeys,
+} from "./general";
 
 export {
     Options,
@@ -35,9 +41,9 @@ export { Component, AbstractComponent, ChildableComponent } from "./component";
 export { Event, EventDispatcher } from "./events";
 export {
     normalizePath,
-    directoryExists,
-    ensureDirectoriesExist,
     writeFile,
-    readFile,
+    remove,
+    copy,
+    getCommonDirectory,
 } from "./fs";
 export { Logger, LogLevel, ConsoleLogger, CallbackLogger } from "./loggers";

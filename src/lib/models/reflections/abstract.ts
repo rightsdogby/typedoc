@@ -4,6 +4,8 @@ import type { Comment } from "../comments/comment";
 import type { TypeParameterReflection } from "./type-parameter";
 import { splitUnquotedString } from "./utils";
 import type { ProjectReflection } from "./project";
+import { makeToKindString } from "../../utils/enum";
+import type { ContainerReflection } from "./container";
 
 /**
  * Holds all data models used by TypeDoc.
@@ -70,6 +72,14 @@ export namespace ReflectionKind {
     export const FunctionOrMethod =
         ReflectionKind.Function | ReflectionKind.Method;
     export const SomeModule = ReflectionKind.Namespace | ReflectionKind.Module;
+
+    export const Signature =
+        ReflectionKind.CallSignature |
+        ReflectionKind.ConstructorSignature |
+        ReflectionKind.GetSignature |
+        ReflectionKind.SetSignature;
+
+    export const toKindString = makeToKindString(ReflectionKind);
 }
 
 export enum ReflectionFlag {
@@ -491,6 +501,13 @@ export abstract class Reflection {
      * Return whether this reflection is the root / project reflection.
      */
     isProject(): this is ProjectReflection {
+        return false;
+    }
+
+    /**
+     * Check if this reflection is a container reflection.
+     */
+    isContainer(): this is ContainerReflection {
         return false;
     }
 

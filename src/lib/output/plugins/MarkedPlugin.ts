@@ -5,7 +5,7 @@ import * as Handlebars from "handlebars";
 
 import { Component, ContextAwareRendererComponent } from "../components";
 import { RendererEvent, MarkdownEvent } from "../events";
-import { BindOption, readFile } from "../../utils";
+import { BindOption } from "../../utils";
 import { highlight, isSupportedLanguage } from "../../utils/highlighter";
 import { copy } from "../../utils/fs";
 import type { Theme } from "shiki";
@@ -133,7 +133,7 @@ export class MarkedPlugin extends ContextAwareRendererComponent {
             text = text.replace(this.includePattern, (_match, path) => {
                 path = Path.join(this.includes!, path.trim());
                 if (FS.existsSync(path) && FS.statSync(path).isFile()) {
-                    const contents = readFile(path);
+                    const contents = "readFile(path);";
                     if (path.substr(-4).toLocaleLowerCase() === ".hbs") {
                         const template = Handlebars.compile(contents);
                         return template(context, {

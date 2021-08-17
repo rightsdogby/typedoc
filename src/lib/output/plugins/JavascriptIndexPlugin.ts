@@ -99,6 +99,6 @@ export class JavascriptIndexPlugin extends RendererComponent {
             index,
         });
 
-        writeFile(jsonFileName, `window.searchData = ${jsonData}`, false);
+        writeFile(jsonFileName, `window.searchData = ${jsonData}`);
     }
 }

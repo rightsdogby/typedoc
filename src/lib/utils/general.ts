@@ -17,9 +17,12 @@ type InternalOnly = true;
  *
  * ```ts
  * function over(flag: 'a' | 'b'): string
- * function over(flag: IfStrict<string, never>): string
+ * function over(flag: IfInternal<string, never>): string
  * function over(flag: string): string { return flag }
  * ```
+ *
+ * This is also heavily used to prevent TypeDoc code from using deprecated overloads
+ * or properties.
  */
 export type IfInternal<T, F> = InternalOnly extends true ? T : F;
 
@@ -29,6 +32,34 @@ export type IfInternal<T, F> = InternalOnly extends true ? T : F;
  * See {@link IfInternal} for the rationale.
  */
 export type NeverIfInternal<T> = IfInternal<never, T>;
+
+/**
+ * Helper type to allow widening a string literal for external consumers.
+ *
+ * @privateRemarks
+ * Uses `string & {}` to prevent TypeScript from collapsing `string | 'a'` down
+ * to `string`, which improves intellisense.
+ */
+export type StringIfExternal<T extends string> =
+    | T
+    | NeverIfInternal<string & {}>;
+
+/**
+ * Inverse of `Readonly<T>`
+ */
+export type Writable<T> = {
+    -readonly [K in keyof T]: T[K];
+};
+
+/**
+ * Helper to convert an object literal into a discriminated union.
+ * Note that this does not add properties to the value. This is intentional since
+ * it means that it can be used with objects of any shape safely, with the small
+ * downside of needing to access a `value` property.
+ */
+export type ToDiscriminatedUnion<T> = {
+    [K in keyof T]: { type: K; value: T[K] };
+}[keyof T];
 
 /**
  * Check if two types are equivalent, return `A` if they are, `B` if not.

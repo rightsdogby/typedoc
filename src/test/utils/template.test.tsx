@@ -33,11 +33,11 @@ describe("JSX", () => {
     });
 
     it("Recognizes void elements", () => {
-        equal(renderElement(<div id="main" />), '<div id="main" />');
+        equal(renderElement(<div id="main" />), '<div id="main"></div>');
     });
 
     it("Handles false boolean attributes", () => {
-        equal(renderElement(<details open={false} />), "<details />");
+        equal(renderElement(<details open={false} />), "<details></details>");
     });
 
     it("Supports children", () => {
@@ -69,7 +69,7 @@ describe("JSX", () => {
         );
     });
 
-    it("Supports Portal for injecting raw HTML", () => {
+    it("Supports <Raw /> for injecting HTML", () => {
         equal(
             renderElement(<Raw html="<strong>foo</strong>" />),
             "<strong>foo</strong>"

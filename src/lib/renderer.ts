@@ -2,7 +2,7 @@ import { ok } from "assert";
 import type { Application } from "./application";
 import type { ProjectReflection } from "./models";
 import type { NeverIfInternal } from "./utils";
-import { HtmlRenderer } from "./output/html";
+import { HtmlRenderer } from "./html/renderer";
 import { Serializer } from "./json";
 
 /**

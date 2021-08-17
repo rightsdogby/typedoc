@@ -1,6 +1,5 @@
 import * as Handlebars from "handlebars";
 
-import { readFile } from "../../../utils/fs";
 import { ResourceStack, Resource } from "./stack";
 
 export class Template<T = any> extends Resource {
@@ -8,7 +7,7 @@ export class Template<T = any> extends Resource {
 
     getTemplate(): Handlebars.TemplateDelegate<T> {
         if (!this.template) {
-            const raw = readFile(this.fileName);
+            const raw = "readFile"; //(this.fileName);
             this.template = Handlebars.compile(raw, {
                 preventIndent: true,
             });

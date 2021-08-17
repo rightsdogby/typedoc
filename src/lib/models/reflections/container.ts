@@ -49,4 +49,8 @@ export class ContainerReflection extends Reflection {
             }
         }
     }
+
+    isContainer(): this is ContainerReflection {
+        return true;
+    }
 }

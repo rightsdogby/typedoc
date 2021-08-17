@@ -11,10 +11,12 @@ const toCopy = [
     "test/utils/options/readers/data",
 ];
 
-for (const dir of toCopy) {
-    const source = join(__dirname, "../src", dir);
-    const target = join(__dirname, "../dist", dir);
-    remove(target);
-    fs.mkdirSync(target, { recursive: true });
-    copy(source, target);
-}
+Promise.all(
+    toCopy.map(async (dir) => {
+        const source = join(__dirname, "../src", dir);
+        const target = join(__dirname, "../dist", dir);
+        await remove(target);
+        fs.mkdirSync(target, { recursive: true });
+        await copy(source, target);
+    })
+);

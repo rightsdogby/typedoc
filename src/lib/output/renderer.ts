@@ -17,7 +17,7 @@ import type { Theme } from "./theme";
 import { RendererEvent, PageEvent } from "./events";
 import type { ProjectReflection } from "../models/reflections/project";
 import type { UrlMapping } from "./models/UrlMapping";
-import { remove, writeFile } from "../utils/fs";
+import { remove } from "../utils/fs";
 import { DefaultTheme } from "./themes/DefaultTheme";
 import { RendererComponent } from "./components";
 import { Component, ChildableComponent } from "../utils/component";
@@ -66,7 +66,7 @@ export class Renderer extends ChildableComponent<
      */
     theme?: Theme;
 
-    @BindOption("theme")
+    // @BindOption("theme")
     themeName!: string;
 
     @BindOption("disableOutputCheck")
@@ -158,7 +158,7 @@ export class Renderer extends ChildableComponent<
         }
 
         try {
-            writeFile(page.filename, page.contents, false);
+            // writeFile(page.filename, page.contents, false);
         } catch (error) {
             this.application.logger.error(`Could not write ${page.filename}`);
             return false;

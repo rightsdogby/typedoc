@@ -15,6 +15,23 @@ function escapeHtml(html: string) {
     );
 }
 
+const voidElements = new Set([
+    "area",
+    "base",
+    "br",
+    "col",
+    "embed",
+    "hr",
+    "img",
+    "input",
+    "link",
+    "meta",
+    "param",
+    "source",
+    "track",
+    "wbr",
+]);
+
 /**
  * JSX factory function to create an "element" that can later be rendered with {@link renderElement}
  * @param tag
@@ -56,7 +73,7 @@ export function renderElement(element: jsx.Element | null | undefined): string {
         for (const [key, val] of Object.entries(props ?? {})) {
             if (typeof val == "boolean") {
                 if (val) {
-                    html.push(" ", key);
+                    html.push(" ", key, '=""');
                 }
             } else {
                 html.push(" ", key, "=", JSON.stringify(val));
@@ -66,10 +83,7 @@ export function renderElement(element: jsx.Element | null | undefined): string {
 
     let hasChildren = false;
     if ("innerHTML" in (props ?? {})) {
-        ok(
-            children.length === 0,
-            "Elements may not specify both children and innerHTML"
-        );
+        ok(children.length === 0, "Elements may not specify both children and innerHTML");
         hasChildren = true;
         html.push(">", String((props as any).innerHTML));
     } else if (children.length) {
@@ -79,10 +93,14 @@ export function renderElement(element: jsx.Element | null | undefined): string {
     }
 
     if (tag !== jsx.Fragment) {
-        if (hasChildren) {
-            html.push("</", tag, ">");
+        if (!hasChildren) {
+            if (voidElements.has(tag)) {
+                html.push(" />");
+            } else {
+                html.push("></", tag, ">");
+            }
         } else {
-            html.push(" />");
+            html.push("</", tag, ">");
         }
     }
 
@@ -98,6 +116,33 @@ export function renderElement(element: jsx.Element | null | undefined): string {
                 html.push(escapeHtml(child));
             } else {
                 html.push(renderElement(child));
+            }
+        }
+    }
+}
+
+/**
+ * Extremely limited query function for reaching into a {@link JSX} structure
+ * to find an element that's already been declared. This can be used to inject content into a page
+ * after it has been created in the `page.end` hook.
+ */
+export function findElementById(root: jsx.Element, id: string): jsx.Element | undefined {
+    const checks: jsx.Element[] = [];
+    let current: jsx.Element | undefined = root;
+
+    do {
+        if (current.props && (current.props as any).id === id) {
+            return current;
+        }
+        addChildren(current.children);
+    } while ((current = checks.shift()));
+
+    function addChildren(children: jsx.Children[]) {
+        for (const child of children) {
+            if (Array.isArray(child)) {
+                addChildren(child);
+            } else if (child && typeof child === "object") {
+                checks.push(child);
             }
         }
     }

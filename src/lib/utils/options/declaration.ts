@@ -1,5 +1,8 @@
 import type { Theme as ShikiTheme } from "shiki";
+import type { StringIfExternal } from "../general";
 import type { LogLevel } from "../loggers";
+
+export type TypeDocThemes = "default" | "minimal";
 
 /**
  * An interface describing all TypeDoc specific options. Generated from a
@@ -56,7 +59,7 @@ export interface TypeDocOptionMap {
     out: string;
     json: string;
 
-    theme: string;
+    theme: StringIfExternal<TypeDocThemes>;
     name: string;
     includeVersion: boolean;
     excludeTags: string[];
